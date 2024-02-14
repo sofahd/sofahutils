@@ -107,13 +107,16 @@ class DockerCompose():
     This class is used to represent a docker-compose file.
     """
 
-    def __init__(self, services:Optional[list[DockerComposeService]] = []) -> None:
+    def __init__(self, version:Optional[str]="3.8", services:Optional[list[DockerComposeService]] = []) -> None:
         """
         Constructor for the DockerCompose class.
+        :param version: Optional: the version of the docker-compose defaults to `"3.8"`
+        :type version: str
         :param services: the services that are in the docker-compose file, defaults to []
         :type services: Optional[list[DockerComposeService]]
         """
 
+        self.version = version
         self.services = services
     
     def dump(self) -> list[str]:
@@ -123,7 +126,7 @@ class DockerCompose():
 
         network_lines = self._build_networks()
 
-        ret_list = ["version: '3'", "\n"]
+        ret_list = [f"version: '{self.version}'", "\n"]
 
         self.services.sort(key=lambda x: x.name)
 
