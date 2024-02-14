@@ -1,4 +1,5 @@
-from typing import Optional, Union  
+from typing import Optional, Union
+import subprocess
 
 class Service: 
     """
@@ -51,6 +52,8 @@ class DockerComposeService(Service):
         self.networks = [networks] if isinstance(networks, str) else networks
         self.service_def = service_def
 
+        self.github_link = github_link
+
         if not isinstance(networks, list) or not all(isinstance(item, str) for item in networks):
             raise TypeError(f"ip_address must be of type str or list[str], not {type(networks)}")
         
@@ -85,6 +88,12 @@ class DockerComposeService(Service):
 
         return ret_list
     
+    def download_repo(self):
+        """
+        With this method you can download the repo containing the code for the service.
+        """
+    
+        subprocess.run(f"git clone {self.github_link}", shell=True)
     
 
 class DockerCompose():
