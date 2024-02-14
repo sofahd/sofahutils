@@ -22,7 +22,7 @@ class DockerComposeService(Service):
 
     """
 
-    def __init__(self, name:str, service_def:list[str], github_link:str, networks:Optional[Union[str, list[str]]] = [], variables:Optional[dict] = {}) -> None:
+    def __init__(self, name:str, service_def:list[str], github_link:str, token:str, networks:Optional[Union[str, list[str]]] = [], variables:Optional[dict] = {}) -> None:
         """
         Constructor for the DockerComposeService class.
 
@@ -46,6 +46,10 @@ class DockerComposeService(Service):
         :type networks: Optional[Union[str, list[str]]]
         :param variables: the variables to be replaced in the service_def, defaults to {}
         :type variables: Optional[dict]
+        :param github_link: the link to the github repository of the service
+        :type github_link: str
+        :param token: the token to access the github repository
+        :type token: str
         """
 
         super().__init__(name=name)
@@ -53,6 +57,8 @@ class DockerComposeService(Service):
         self.service_def = service_def
 
         self.github_link = github_link
+
+        self.token = token
 
         if not isinstance(networks, list) or not all(isinstance(item, str) for item in networks):
             raise TypeError(f"ip_address must be of type str or list[str], not {type(networks)}")
@@ -93,7 +99,7 @@ class DockerComposeService(Service):
         With this method you can download the repo containing the code for the service.
         """
     
-        subprocess.run(f"git clone {self.github_link}", shell=True)
+        subprocess.run(f"git clone {self.github_link.replace("$TOKEN", self.token)}", shell=True)
     
 
 class DockerCompose():
