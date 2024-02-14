@@ -89,7 +89,7 @@ class DockerComposeService(Service):
             for var in self.variables.keys():
                 line = line.replace(var, str(self.variables[var]))
             ret_list.append(line)
-        ret_list.append(f"\n")
+        ret_list.append("")
         ret_list.insert(0, f"  {self.name}:")
 
         return ret_list
@@ -126,7 +126,7 @@ class DockerCompose():
 
         network_lines = self._build_networks()
 
-        ret_list = [f"version: '{self.version}'", "\n"]
+        ret_list = [f"version: '{self.version}'", "", "services:"]
 
         self.services.sort(key=lambda x: x.name)
 
