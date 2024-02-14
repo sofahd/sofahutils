@@ -99,7 +99,7 @@ class DockerComposeService(Service):
         With this method you can download the repo containing the code for the service.
         """
     
-        subprocess.run(f"git clone {self.github_link.replace("$TOKEN", self.token)}", shell=True)
+        subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)}", shell=True)
     
 
 class DockerCompose():
