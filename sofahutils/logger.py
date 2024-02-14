@@ -11,10 +11,10 @@ class SofahLogger:
     def __init__(self, url:str, dst_port:Optional[int] = 0) -> None:
         """
         Constructor for the SofahLogger class.
-        param url: The url to log to.
-        type url: str
-        param dst_port: the port of the service you are logging for, Optional, defaults to 0
-        type dst_port: int
+        :param url: The url to log to.
+        :type url: str
+        :param dst_port: the port of the service you are logging for, Optional, defaults to 0
+        :type dst_port: int
         """
         resp = requests.get(f"{url}/health")
         
@@ -30,14 +30,14 @@ class SofahLogger:
         """
         Use this method when you want to log something but need greater freedom about the fields of the log.
 
-        param event_id: The event_id of the log.
-        type event_id: str
-        param content: The content of the log.
-        type content: dict
-        param ip: The optional ip of the client, defaults to 127.0.1.1
-        type ip: str
-        param port: The optional port of the client, defaults to 0
-        type port: int
+        :param event_id: The event_id of the log.
+        :type event_id: str
+        :param content: The content of the log.
+        :type content: dict
+        :param ip: The optional ip of the client, defaults to 127.0.1.1
+        :type ip: str
+        :param port: The optional port of the client, defaults to 0
+        :type port: int
         """
 
         self._send_log(level='log', ip=ip, port=port, content=content, event_id=event_id)
@@ -47,14 +47,14 @@ class SofahLogger:
         """
         Use this method when you want to log an info message.
 
-        param message: The message of the log.
-        type message: str
-        param ip: The optional ip of the client, defaults to 127.0.1.1
-        type ip: str
-        param port: The optional port of the client, defaults to 0
-        type port: int
-        param method: The optional method of the log, defaults to 'generic'
-        type method: str
+        :param message: The message of the log.
+        :type message: str
+        :param ip: The optional ip of the client, defaults to 127.0.1.1
+        :type ip: str
+        :param port: The optional port of the client, defaults to 0
+        :type port: int
+        :param method: The optional method of the log, defaults to 'generic'
+        :type method: str
         """
 
         self._send_log(level='info', ip=ip, port=port, message=message, method=method)
@@ -64,14 +64,14 @@ class SofahLogger:
         """
         Use this method when you want to log an warn message.
 
-        param message: The message of the log.
-        type message: str
-        param ip: The optional ip of the client, defaults to 127.0.1.1
-        type ip: str
-        param port: The optional port of the client, defaults to 0
-        type port: int
-        param method: The optional method of the log, defaults to 'generic'
-        type method: str
+        :param message: The message of the log.
+        :type message: str
+        :param ip: The optional ip of the client, defaults to 127.0.1.1
+        :type ip: str
+        :param port: The optional port of the client, defaults to 0
+        :type port: int
+        :param method: The optional method of the log, defaults to 'generic'
+        :type method: str
         """
 
         self._send_log(level='warn', ip=ip, port=port, message=message, method=method)
@@ -81,14 +81,14 @@ class SofahLogger:
         """
         Use this method when you want to log an error message.
 
-        param message: The message of the log.
-        type message: str
-        param ip: The optional ip of the client, defaults to 127.0.1.1
-        type ip: str
-        param port: The optional port of the client, defaults to 0
-        type port: int
-        param method: The optional method of the log, defaults to 'generic'
-        type method: str
+        :param message: The message of the log.
+        :type message: str
+        :param ip: The optional ip of the client, defaults to 127.0.1.1
+        :type ip: str
+        :param port: The optional port of the client, defaults to 0
+        :type port: int
+        :param method: The optional method of the log, defaults to 'generic'
+        :type method: str
         """
 
         self._send_log(level='error', ip=ip, port=port, message=message, method=method)
@@ -100,20 +100,20 @@ class SofahLogger:
         Choose the level between 'info', 'warn', 'error' and 'log'.
         Keep in mind, that only the `log` level requires the `content` and `event_id` parameters , but NOT the `message` or `method` parameter.
         The other levels require the `message` and `method` parameters, but NOT the `content` or `event_id` parameter.
-        param level: The level of the log, must be one of 'info', 'warn', 'error' or 'log'.
-        type level: str
-        param ip: The ip of the client.
-        type ip: str
-        param port: The port of the client.
-        type port: int
-        param content: Optional, only when level is 'log'. The content of the log.
-        type content: dict
-        param event_id: Optional, only when level is 'log'. The event_id of the log.
-        type event_id: str
-        param message: Optional, only when level is 'info', 'warn' or 'error'. The message of the log.
-        type message: str
-        param method: Optional, only when level is 'info', 'warn' or 'error'. The method of the log.
-        type method: str
+        :param level: The level of the log, must be one of 'info', 'warn', 'error' or 'log'.
+        :type level: str
+        :param ip: The ip of the client.
+        :type ip: str
+        :param port: The port of the client.
+        :type port: int
+        :param content: Optional, only when level is 'log'. The content of the log.
+        :type content: dict
+        :param event_id: Optional, only when level is 'log'. The event_id of the log.
+        :type event_id: str
+        :param message: Optional, only when level is 'info', 'warn' or 'error'. The message of the log.
+        :type message: str
+        :param method: Optional, only when level is 'info', 'warn' or 'error'. The method of the log.
+        :type method: str
         """
         if level not in ['info', 'warn', 'error', 'log']:
             raise ValueError("The level must be one of 'info', 'warn', 'error' or 'log'")
