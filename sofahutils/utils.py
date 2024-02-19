@@ -5,7 +5,7 @@ import requests
 This file is used to make a ton of useful utility-functions available to the user.
 """
 
-def get_own_ip(api_list:Union[list[str]], logger:SofahLogger) -> str:
+def get_own_ip(api_list:Union[list[str], str], logger:SofahLogger) -> str:
     """
     This function makes a http request to one of a few submitted apis to get the own ip.
     :param api_list: expects a config to get the urls
