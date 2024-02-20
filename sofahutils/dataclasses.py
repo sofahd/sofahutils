@@ -94,12 +94,21 @@ class DockerComposeService(Service):
 
         return ret_list
     
-    def download_repo(self):
+    def download_repo(self, folder_name_or_path:Optional[str] = None) -> None:
         """
         With this method you can download the repo containing the code for the service.
+        When you specify a path the repo will be downloaded to that path, otherwise it will be downloaded to the current working directory.
+        **ATTENTION:** keep in mind, that this method will not create a subfolder with the repo name. It will download the repo directly into the specified path.
+
+        ---
+        :param folder_name_or_path: the path to the folder where the repo should be downloaded to, defaults to None
+        :type folder_name_or_path: Optional[str]
         """
-    
-        subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)}", shell=True)
+
+        if folder_name_or_path != None:
+            subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)} {folder_name_or_path}", shell=True)
+        else:
+            subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)}", shell=True)
     
 
 class DockerCompose():
