@@ -145,6 +145,17 @@ class DockerCompose():
         ret_list.extend(network_lines)
 
         return ret_list
+    
+    def write_to_file(self, file_path:str) -> None:
+        """
+        This method is used to write the docker-compose file to a file.
+
+        ---
+        :param file_path: the path to the file where the docker-compose file should be written to
+        :type file_path: str
+        """
+        with open(file_path, "w") as file:
+            file.write("\n".join(self.dump()))
 
     def _build_networks(self) -> list[str]:
         """
