@@ -190,5 +190,8 @@ class DockerCompose():
         :type folder_name: str
         """
 
+        if folder_name.endswith("/"):
+            folder_name = folder_name[:-1]
+
         for service in self.services:
             service.download_repo(f"{folder_name}/{service.name}")        
