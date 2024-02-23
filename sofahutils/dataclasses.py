@@ -178,6 +178,17 @@ class DockerCompose():
                 ret_list.append(f"    name: {network}")
                 ret_list.append("    driver: bridge")
 
-
         return ret_list
-        
+
+    def download_all_repos(self, folder_name:str) -> None:
+        """
+        This method is used to download all the repos of the services in the docker-compose file.
+        **ATTENTION:** This method will create a subfolder with the name of the service and download the repo into that subfolder.
+
+        ---
+        :param folder_name: the name of the folder where the repos should be downloaded to
+        :type folder_name: str
+        """
+
+        for service in self.services:
+            service.download_repo(f"{folder_name}/{service.name}")        
