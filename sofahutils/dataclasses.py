@@ -1,5 +1,5 @@
 from typing import Optional, Union
-import subprocess
+import re, subprocess
 
 class Service: 
     """
@@ -22,7 +22,7 @@ class DockerComposeService(Service):
 
     """
 
-    def __init__(self, name:str, service_def:list[str], github_link:str, token:str, networks:Optional[Union[str, list[str]]] = None, variables:Optional[dict] = None) -> None:
+    def __init__(self, name:str, service_def:list[str], github_link:str, token:Optional[str] = None, networks:Optional[Union[str, list[str]]] = None, variables:Optional[dict] = None) -> None:
         """
         Constructor for the DockerComposeService class.
 
@@ -34,9 +34,9 @@ class DockerComposeService(Service):
         }
         ```
         For an easy deployment the `github_link` parameter is used to store the link to the github repository of the service.
-        The github link should look like this:
-        `https://$TOKEN:x-oauth-basic@github.com/sofahd/<repo_name>.git` Where <repo_name> is the name of the repository, and `$TOKEN` is the placeholder for the oauth token.
-        In this case it is expected that the token is stored in the environment, so leave the placeholder as is, and the token will be replaced at runtime.
+        The sofahd repos are public, so this is a plain HTTPS URL, e.g.
+        `https://github.com/sofahd/<repo_name>.git`. (`download_repo` also strips any embedded
+        credentials defensively, so a legacy `$TOKEN:x-oauth-basic@...` link still clones.)
 
         :param name: the name of the service
         :type name: str
@@ -48,8 +48,8 @@ class DockerComposeService(Service):
         :type variables: Optional[dict]
         :param github_link: the link to the github repository of the service
         :type github_link: str
-        :param token: the token to access the github repository
-        :type token: str
+        :param token: deprecated and unused; the sofahd repos are public so no token is needed. Kept for backwards compatibility.
+        :type token: Optional[str]
         """
 
         super().__init__(name=name)
@@ -108,7 +108,9 @@ class DockerComposeService(Service):
         :type folder_name_or_path: Optional[str]
         """
 
-        url = self.github_link.replace('$TOKEN', self.token)
+        # All sofahd repos are public -> clone over plain HTTPS. Strip any embedded
+        # credentials (e.g. a legacy `$TOKEN:x-oauth-basic@`) defensively.
+        url = re.sub(r"https://[^/@]+@", "https://", self.github_link)
         target = folder_name_or_path if folder_name_or_path != None else self.name
         subprocess.run(["git", "clone", url, target])
     
