@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="sofahutils",
-    version="0.1",
-    description="Utilities such as dataclasses and logger for sofah",
+    version="0.2",
+    description="Utilities such as dataclasses, logger, exceptions and shared helpers for sofah",
     long_description=long_description,
     install_requires=[
         'requests'
