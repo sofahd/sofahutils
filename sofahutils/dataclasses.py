@@ -22,7 +22,7 @@ class DockerComposeService(Service):
 
     """
 
-    def __init__(self, name:str, service_def:list[str], github_link:str, token:str, networks:Optional[Union[str, list[str]]] = [], variables:Optional[dict] = {}) -> None:
+    def __init__(self, name:str, service_def:list[str], github_link:str, token:str, networks:Optional[Union[str, list[str]]] = None, variables:Optional[dict] = None) -> None:
         """
         Constructor for the DockerComposeService class.
 
@@ -53,17 +53,20 @@ class DockerComposeService(Service):
         """
 
         super().__init__(name=name)
-        self.networks = [networks] if isinstance(networks, str) else networks
-        self.service_def = service_def
 
-        self.github_link = github_link
-
-        self.token = token
+        if networks is None:
+            networks = []
+        elif isinstance(networks, str):
+            networks = [networks]
 
         if not isinstance(networks, list) or not all(isinstance(item, str) for item in networks):
-            raise TypeError(f"ip_address must be of type str or list[str], not {type(networks)}")
-        
-        self.variables = variables
+            raise TypeError(f"networks must be of type str or list[str], not {type(networks)}")
+
+        self.networks = networks
+        self.service_def = service_def
+        self.github_link = github_link
+        self.token = token
+        self.variables = variables if variables is not None else {}
         
     
     def dump_to_compose(self) -> list[str]:
@@ -116,7 +119,7 @@ class DockerCompose():
     This class is used to represent a docker-compose file.
     """
 
-    def __init__(self, version:Optional[str]="3.8", services:Optional[list[DockerComposeService]] = []) -> None:
+    def __init__(self, version:Optional[str]="3.8", services:Optional[list[DockerComposeService]] = None) -> None:
         """
         Constructor for the DockerCompose class.
         :param version: Optional: the version of the docker-compose defaults to `"3.8"`
@@ -126,7 +129,7 @@ class DockerCompose():
         """
 
         self.version = version
-        self.services = services
+        self.services = services if services is not None else []
     
     def dump(self) -> list[str]:
         """
@@ -137,9 +140,7 @@ class DockerCompose():
 
         ret_list = [f"version: '{self.version}'", "", "services:"]
 
-        self.services.sort(key=lambda x: x.name)
-
-        for service in self.services:
+        for service in sorted(self.services, key=lambda x: x.name):
             ret_list.extend(service.dump_to_compose())
         
         ret_list.extend(network_lines)
