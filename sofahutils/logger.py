@@ -26,7 +26,7 @@ class SofahLogger:
         self.url = url
 
 
-    def log(self, event_id:str, content:dict, ip:Optional[str] = '127.0.1.1', port:Optional[int] = 0) -> None:
+    def log(self, event_id:str, content:dict, ip:Optional[str] = '127.0.1.1', port:Optional[int] = 0, session:Optional[str] = None) -> None:
         """
         Use this method when you want to log something but need greater freedom about the fields of the log.
 
@@ -38,9 +38,12 @@ class SofahLogger:
         :type ip: str
         :param port: The optional port of the client, defaults to 0
         :type port: int
+        :param session: Optional pot-owned session id (e.g. one UUID per TCP connection / SSH
+            channel). When given, log-api records it verbatim instead of deriving one from ip+hour.
+        :type session: Optional[str]
         """
 
-        self._send_log(level='log', ip=ip, port=port, content=content, event_id=event_id)
+        self._send_log(level='log', ip=ip, port=port, content=content, event_id=event_id, session=session)
 
 
     def info(self, message:str, ip:Optional[str] = '127.0.1.1', port:Optional[int] = 0, method:Optional[str] = 'generic') -> None:
@@ -94,7 +97,7 @@ class SofahLogger:
         self._send_log(level='error', ip=ip, port=port, message=message, method=method)
 
 
-    def _send_log(self, level:str, ip:str, port:int, content:Optional[dict] = None, event_id:Optional[str] = None, message:Optional[str] = None, method:Optional[str] = None) -> None:
+    def _send_log(self, level:str, ip:str, port:int, content:Optional[dict] = None, event_id:Optional[str] = None, message:Optional[str] = None, method:Optional[str] = None, session:Optional[str] = None) -> None:
         """
         This method sends the log to the API.
         Choose the level between 'info', 'warn', 'error' and 'log'.
@@ -133,6 +136,8 @@ class SofahLogger:
                 "src_port": port,
                 "dst_port": self.dst_port
             }
+            if session is not None:
+                data["session"] = session
             resp = requests.post(url, data=data)
 
         else:
