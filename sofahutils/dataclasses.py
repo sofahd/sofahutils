@@ -108,10 +108,9 @@ class DockerComposeService(Service):
         :type folder_name_or_path: Optional[str]
         """
 
-        if folder_name_or_path != None:
-            subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)} {folder_name_or_path}", shell=True)
-        else:
-            subprocess.run(f"git clone {self.github_link.replace('$TOKEN', self.token)} {self.name}", shell=True)
+        url = self.github_link.replace('$TOKEN', self.token)
+        target = folder_name_or_path if folder_name_or_path != None else self.name
+        subprocess.run(["git", "clone", url, target])
     
 
 class DockerCompose():
